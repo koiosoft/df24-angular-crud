@@ -1,0 +1,98 @@
+<page-header title="{{ title }}" subtitle="{{ subTitle }}"></page-header>
+<div class="col-sm-12 col-md-12 col-lg-10 col-xl-10">
+  <mat-card>
+    <mat-card-header class="p-b-24 p-x-32">
+      <mat-card-title class="p-t-24 p-b-24">{{ gridTitle }}</mat-card-title>
+      <mat-card-subtitle>{{ gridSummary }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content class="p-x-32">
+      <form #f="ngForm">
+        <div class="flex row align-items-baseline">
+          <mat-form-field class="w-60">
+            <mat-label>Search by any field:</mat-label>
+            <input
+              matInput
+              type="search"
+              [(ngModel)]="searchText"
+              id="search"
+              name="search"
+              (search)="search()"
+              [disabled]="isLoading"
+            />
+          </mat-form-field>
+
+          <a
+            mat-raised-button
+            color="primary"
+            (click)="search()"
+            [disabled]="!f?.valid"
+            class="m-l-12"
+          >
+            Search <mat-icon>search</mat-icon></a
+          >
+        </div>
+        <a
+          mat-raised-button
+          color="primary"
+          [routerLink]="['../<%=pluralize(name)%>', 'new']"
+          [disabled]="isLoading"
+          >Add<mat-icon>add</mat-icon></a
+        >
+      </form>
+      <div>
+        <!-- todo: figure out better material styling for alerts -->
+        <mtx-alert
+          *ngIf="feedback.message"
+          [type]="feedback.type"
+          class="m-t-24"
+        >
+          {{ feedback.message }}
+        </mtx-alert>
+
+        <mat-progress-bar
+          *ngIf="isLoading"
+          class="m-t-48"
+          color="primary"
+          mode="indeterminate"
+        >
+        </mat-progress-bar>
+
+        <mtx-grid
+          [data]="collection"
+          [columns]="columns"
+          [length]="total"
+          [pageOnFront]="false"
+          [pageIndex]="pagination.index"
+          [pageSize]="pagination.size"
+          [pageSizeOptions]="[pagination.size]"
+          (page)="getNextPage($event)"
+          [noResultText]="notResultText"
+          [pageDisabled]="isLoading"
+          [rowHover]="true"
+          [cellTemplate]="{ actions: actionsTpl }"
+          class="m-t-24 m-b-24 w-full"
+        >
+          >
+        </mtx-grid>
+        <ng-template #actionsTpl let-row>
+          <a
+            [routerLink]="['../<%=pluralize(name)%>', row.id]"
+            mat-raised-button
+            color="primary"
+            [disabled]="isLoading"
+            >Edit<mat-icon>mode_edit_outline</mat-icon></a
+          >&nbsp;
+          <button
+            (click)="delete(row)"
+            mat-button
+            color="warn"
+            [disabled]="isLoading"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </ng-template>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

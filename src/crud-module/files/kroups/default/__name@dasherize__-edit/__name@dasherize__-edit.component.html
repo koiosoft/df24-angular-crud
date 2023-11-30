@@ -1,0 +1,38 @@
+<page-header title="{{ title }}" subtitle="{{ subTitle }}"></page-header>
+<div class="col-sm-12 col-md-12 col-lg-10 col-xl-10">
+  <mat-card>
+    <mat-card-header class="p-b-24 p-x-32">
+      <mat-card-title class="p-t-24 p-b-24">{{ gridTitle }}</mat-card-title>
+      <mat-card-subtitle>{{ gridSummary }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content class="p-x-32">
+        <form *ngIf="<%=camelize(name)%>" #editForm="ngForm" (ngSubmit)="save()">
+        <% for (let field of model.fields) { %>
+          <mat-form-field>
+            <mat-label<%if (!field.readonly) {%> for="<%=field.name%>"<%}%>><%=field.label%></mat-label>
+            <%if (field.readonly) {%><input matInput [(ngModel)]="<%=camelize(name)%>.<%=field.name%>" id="<%=field.name%>" name="<%=field.name%>" placeholder="<%=field.label%>" readonly> <%}%><%if (!field.readonly && field.type === 'date'){ %><input matInput [matDatepicker]="picker" [(ngModel)]="<%=camelize(name)%>.<%=field.name%>" id="<%=field.name%>" name="<%=field.name%>" placeholder="<%=field.label%>"><mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle><mat-datepicker #picker></mat-datepicker><% } else if (!field.readonly && field.type === 'number'){ %><input matInput type="number" [(ngModel)]="<%=camelize(name)%>.<%=field.name%>" id="<%=field.name%>" name="<%=field.name%>" placeholder="<%=field.label%>"><% } else if (!field.readonly) { %><input matInput [(ngModel)]="<%=camelize(name)%>.<%=field.name%>" id="<%=field.name%>" name="<%=field.name%>" placeholder="<%=field.label%>"><% } %>
+          </mat-form-field>
+        <% } %>
+              <!-- todo: figure out better material styling for alerts -->
+          <mtx-alert
+              *ngIf="feedback.message"
+              [type]="feedback.type"
+              >
+              {{ feedback.message }}
+          </mtx-alert>
+          <div class="button-row" role="group">
+            <button type="submit" mat-raised-button color="primary" [disabled]="saving">Save</button>
+            <button type="button" mat-button color="accent" (click)="cancel()" [disabled]="saving">Close</button>
+          </div>
+        </form>
+        <mat-progress-bar
+          *ngIf="saving"
+          class="m-b-24"
+          color="primary"
+          mode="indeterminate"
+        >
+        </mat-progress-bar>
+    </mat-card-content>
+  </mat-card>
+</div>

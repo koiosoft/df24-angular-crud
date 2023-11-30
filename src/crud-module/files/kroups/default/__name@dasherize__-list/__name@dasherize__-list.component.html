@@ -1,0 +1,120 @@
+<page-header title="{{ title }}" subtitle="{{ subTitle }}"></page-header>
+<div class="col-sm-12 col-md-12 col-lg-10 col-xl-10">
+  <mat-card>
+    <mat-card-header class="p-b-24 p-x-32">
+      <mat-card-title class="p-t-24 p-b-24">{{ gridTitle }}</mat-card-title>
+      <mat-card-subtitle>{{ gridSummary }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content class="p-x-32">
+      <form #f="ngForm">
+        <div class="flex row align-items-baseline">
+          <mat-form-field class="w-60">
+            <mat-label>Search by any field:</mat-label>
+            <input
+              matInput
+              type="search"
+              [(ngModel)]="searchText"
+              id="search"
+              name="search"
+              (search)="search()"
+              [disabled]="processing"
+            />
+          </mat-form-field>
+
+          <a
+            mat-raised-button
+            color="primary"
+            (click)="search()"
+            [disabled]="!f?.valid"
+            class="m-l-12"
+          >
+            Search <mat-icon>search</mat-icon></a
+          >
+        </div>
+        <a
+          mat-raised-button
+          color="primary"
+          [routerLink]="['../<%=pluralize(name)%>', 'new']"
+          [disabled]="processing"
+          >Add<mat-icon>add</mat-icon></a
+        >
+      </form>
+      <div>
+        <!-- todo: figure out better material styling for alerts -->
+        <mtx-alert
+          *ngIf="feedback.message"
+          [type]="feedback.type"
+          class="m-t-24"
+        >
+          {{ feedback.message }}
+        </mtx-alert>
+
+        <mat-progress-bar
+          *ngIf="processing"
+          class="m-t-48"
+          color="primary"
+          mode="indeterminate"
+        >
+        </mat-progress-bar>
+
+        <% let id = getId(model); %>
+        <table
+          *ngIf="<%=camelize(name)%>List.length > 0"
+          mat-table
+          #table
+          [dataSource]="<%=camelize(name)%>List"
+          class="m-t-24 m-b-24 w-full"
+        >
+          <% for (let field of model.fields) { %>
+          <ng-container matColumnDef="<%=field.name%>">
+            <mat-header-cell *matHeaderCellDef>
+              <%=field.label%>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let item">
+              {{item.<%=field.name%><%=(field.control === 'date')? ' | date': '' %>}}
+            </mat-cell>
+          </ng-container>
+          <% } %>
+          <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+            <mat-cell *matCellDef="let item">
+              <a
+                [routerLink]="['../<%=pluralize(name)%>', item.<%=id.name%> ]"
+                mat-raised-button
+                color="primary"
+                [disabled]="processing"
+                >Edit<mat-icon>mode_edit_outline</mat-icon></a
+              >&nbsp;
+              <button
+                (click)="delete(item)"
+                mat-button
+                color="warn"
+                [disabled]="processing"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </mat-cell>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+        </table>
+      </div>
+      <div
+        *ngIf="hasMorePages()"
+        class="w-100 justify-content-center m-t-48"
+        style="display: flex"
+      >
+        <a
+          mat-raised-button
+          color="primary"
+          [disabled]="!f?.valid"
+          class="align-self-center"
+          (click)="next()"
+        >
+          Load more <mat-icon>keyboard_arrow_down</mat-icon></a
+        >
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
