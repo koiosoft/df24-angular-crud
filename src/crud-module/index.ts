@@ -23,7 +23,7 @@ import { addModuleImportToModule } from "@angular/cdk/schematics";
 export const BOOTSTRAP = "bootstrap";
 export const MATERIAL = "material";
 export const PAPER_DASHBOARD = "paper-dashboard";
-export const MATERIAL_KROUPS = "kroups";
+export const MATERIAL_DF24 = "df24";
 
 export function generate(options: CrudOptions): Rule {
   return async (host: Tree) => {
@@ -33,7 +33,7 @@ export function generate(options: CrudOptions): Rule {
     const moduleName = options.module ?? "";
     const features = options.features ?? "default";
 
-    cssFramework = MATERIAL_KROUPS;
+    cssFramework = MATERIAL_DF24;
 
     const workspace = await getWorkspace(host);
     if (!options.project) {

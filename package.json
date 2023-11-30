@@ -1,5 +1,5 @@
 {
-  "name": "kroups-crud",
+  "name": "df24-crud",
   "version": "1.0.0",
   "description": "Generate CRUD applications with Angular, Material, Matero, the CLI, and Schematics",
   "scripts": {

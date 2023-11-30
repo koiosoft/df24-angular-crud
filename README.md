@@ -74,12 +74,12 @@ Generating CRUD applications with the Angular CLI and Schematics.
    ```
 
    ```
-    npx ng g kroups-crud:crud-module hotel
+    npx ng g df24-crud:crud-module hotel
 
    ```
 
    ```
-    npx ng g kroups-crud:crud-module profile -m pages -f single-entity-form
+    npx ng g df24-crud:crud-module profile -m pages -f single-entity-form
 
    ```
 
